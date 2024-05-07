@@ -779,14 +779,23 @@ class FansList extends Fans
 
         // Get default search criteria
         AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+        AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(true));
 
         // Get basic search values
         $this->loadBasicSearchValues();
+
+        // Get and validate search values for advanced search
+        if (EmptyValue($this->UserAction)) { // Skip if user action
+            $this->loadSearchValues();
+        }
 
         // Process filter list
         if ($this->processFilterList()) {
             $this->terminate();
             return;
+        }
+        if (!$this->validateSearch()) {
+            // Nothing to do
         }
 
         // Restore search parms from Session if not searching / reset / export
@@ -805,6 +814,14 @@ class FansList extends Fans
             $srchBasic = $this->basicSearchWhere();
         }
 
+        // Get advanced search criteria
+        if (!$this->hasInvalidFields()) {
+            $srchAdvanced = $this->advancedSearchWhere();
+        }
+
+        // Get query builder criteria
+        $query = $DashboardReport ? "" : $this->queryBuilderWhere();
+
         // Restore display records
         if ($this->Command != "json" && $this->getRecordsPerPage() != "") {
             $this->DisplayRecords = $this->getRecordsPerPage(); // Restore from Session
@@ -820,6 +837,16 @@ class FansList extends Fans
             if ($this->BasicSearch->Keyword != "") {
                 $srchBasic = $this->basicSearchWhere(); // Save to session
             }
+
+            // Load advanced search from default
+            if ($this->loadAdvancedSearchDefault()) {
+                $srchAdvanced = $this->advancedSearchWhere(); // Save to session
+            }
+        }
+
+        // Restore search settings from Session
+        if (!$this->hasInvalidFields()) {
+            $this->loadAdvancedSearch();
         }
 
         // Build search criteria
@@ -1072,6 +1099,12 @@ class FansList extends Fans
             $filterList = Concat($filterList, $wrk, ",");
         }
 
+        // Query Builder rules
+        $rules = $this->queryBuilderRules();
+        if ($rules) {
+            $filterList = Concat($filterList, "\"" . Config("TABLE_RULES") . "\":\"" . JsEncode($rules) . "\"", ",");
+        }
+
         // Return filter list in JSON
         if ($filterList != "") {
             $filterList = "\"data\":{" . $filterList . "}";
@@ -1195,6 +1228,122 @@ class FansList extends Fans
         $this->Keterangan->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+        if ($filter[Config("TABLE_RULES")] ?? false) {
+            $this->Command = "query"; // Set command for query builder
+            $this->setSessionRules($filter[Config("TABLE_RULES")]);
+        }
+    }
+
+    // Advanced search WHERE clause based on QueryString
+    public function advancedSearchWhere($default = false)
+    {
+        global $Security;
+        $where = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $this->buildSearchSql($where, $this->FansID, $default, false); // FansID
+        $this->buildSearchSql($where, $this->Nama, $default, false); // Nama
+        $this->buildSearchSql($where, $this->Gender, $default, false); // Gender
+        $this->buildSearchSql($where, $this->NomorHP, $default, false); // NomorHP
+        $this->buildSearchSql($where, $this->TahunKelahiran, $default, false); // TahunKelahiran
+        $this->buildSearchSql($where, $this->Kota, $default, false); // Kota
+        $this->buildSearchSql($where, $this->Profesi, $default, false); // Profesi
+        $this->buildSearchSql($where, $this->Hobi, $default, false); // Hobi
+        $this->buildSearchSql($where, $this->AcaraID, $default, false); // AcaraID
+        $this->buildSearchSql($where, $this->RadioID, $default, false); // RadioID
+        $this->buildSearchSql($where, $this->Keterangan, $default, false); // Keterangan
+
+        // Set up search command
+        if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
+            $this->Command = "search";
+        }
+        if (!$default && $this->Command == "search") {
+            $this->FansID->AdvancedSearch->save(); // FansID
+            $this->Nama->AdvancedSearch->save(); // Nama
+            $this->Gender->AdvancedSearch->save(); // Gender
+            $this->NomorHP->AdvancedSearch->save(); // NomorHP
+            $this->TahunKelahiran->AdvancedSearch->save(); // TahunKelahiran
+            $this->Kota->AdvancedSearch->save(); // Kota
+            $this->Profesi->AdvancedSearch->save(); // Profesi
+            $this->Hobi->AdvancedSearch->save(); // Hobi
+            $this->AcaraID->AdvancedSearch->save(); // AcaraID
+            $this->RadioID->AdvancedSearch->save(); // RadioID
+            $this->Keterangan->AdvancedSearch->save(); // Keterangan
+
+            // Clear rules for QueryBuilder
+            $this->setSessionRules("");
+        }
+        return $where;
+    }
+
+    // Query builder rules
+    public function queryBuilderRules()
+    {
+        return Post("rules") ?? $this->getSessionRules();
+    }
+
+    // Quey builder WHERE clause
+    public function queryBuilderWhere($fieldName = "")
+    {
+        global $Security;
+        if (!$Security->canSearch()) {
+            return "";
+        }
+
+        // Get rules by query builder
+        $rules = $this->queryBuilderRules();
+
+        // Decode and parse rules
+        $where = $rules ? $this->parseRules(json_decode($rules, true), $fieldName) : "";
+
+        // Clear other search and save rules to session
+        if ($where && $fieldName == "") { // Skip if get query for specific field
+            $this->resetSearchParms();
+            $this->setSessionRules($rules);
+        }
+
+        // Return query
+        return $where;
+    }
+
+    // Build search SQL
+    protected function buildSearchSql(&$where, $fld, $default, $multiValue)
+    {
+        $fldParm = $fld->Param;
+        $fldVal = $default ? $fld->AdvancedSearch->SearchValueDefault : $fld->AdvancedSearch->SearchValue;
+        $fldOpr = $default ? $fld->AdvancedSearch->SearchOperatorDefault : $fld->AdvancedSearch->SearchOperator;
+        $fldCond = $default ? $fld->AdvancedSearch->SearchConditionDefault : $fld->AdvancedSearch->SearchCondition;
+        $fldVal2 = $default ? $fld->AdvancedSearch->SearchValue2Default : $fld->AdvancedSearch->SearchValue2;
+        $fldOpr2 = $default ? $fld->AdvancedSearch->SearchOperator2Default : $fld->AdvancedSearch->SearchOperator2;
+        $fldVal = ConvertSearchValue($fldVal, $fldOpr, $fld);
+        $fldVal2 = ConvertSearchValue($fldVal2, $fldOpr2, $fld);
+        $fldOpr = ConvertSearchOperator($fldOpr, $fld, $fldVal);
+        $fldOpr2 = ConvertSearchOperator($fldOpr2, $fld, $fldVal2);
+        $wrk = "";
+        $sep = $fld->UseFilter ? Config("FILTER_OPTION_SEPARATOR") : Config("MULTIPLE_OPTION_SEPARATOR");
+        if (is_array($fldVal)) {
+            $fldVal = implode($sep, $fldVal);
+        }
+        if (is_array($fldVal2)) {
+            $fldVal2 = implode($sep, $fldVal2);
+        }
+        if (Config("SEARCH_MULTI_VALUE_OPTION") == 1 && !$fld->UseFilter || !IsMultiSearchOperator($fldOpr)) {
+            $multiValue = false;
+        }
+        if ($multiValue) {
+            $wrk = $fldVal != "" ? GetMultiSearchSql($fld, $fldOpr, $fldVal, $this->Dbid) : ""; // Field value 1
+            $wrk2 = $fldVal2 != "" ? GetMultiSearchSql($fld, $fldOpr2, $fldVal2, $this->Dbid) : ""; // Field value 2
+            AddFilter($wrk, $wrk2, $fldCond);
+        } else {
+            $wrk = GetSearchSql($fld, $fldVal, $fldOpr, $fldCond, $fldVal2, $fldOpr2, $this->Dbid);
+        }
+        if ($this->SearchOption == "AUTO" && in_array($this->BasicSearch->getType(), ["AND", "OR"])) {
+            $cond = $this->BasicSearch->getType();
+        } else {
+            $cond = SameText($this->SearchOption, "OR") ? "OR" : "AND";
+        }
+        AddFilter($where, $wrk, $cond);
     }
 
     // Show list of filters
@@ -1206,6 +1355,105 @@ class FansList extends Fans
         $filterList = "";
         $captionClass = $this->isExport("email") ? "ew-filter-caption-email" : "ew-filter-caption";
         $captionSuffix = $this->isExport("email") ? ": " : "";
+
+        // Field FansID
+        $filter = $this->queryBuilderWhere("FansID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->FansID, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->FansID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field Nama
+        $filter = $this->queryBuilderWhere("Nama");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->Nama, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->Nama->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field Gender
+        $filter = $this->queryBuilderWhere("Gender");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->Gender, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->Gender->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field NomorHP
+        $filter = $this->queryBuilderWhere("NomorHP");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->NomorHP, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->NomorHP->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field TahunKelahiran
+        $filter = $this->queryBuilderWhere("TahunKelahiran");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->TahunKelahiran, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->TahunKelahiran->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field Kota
+        $filter = $this->queryBuilderWhere("Kota");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->Kota, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->Kota->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field Profesi
+        $filter = $this->queryBuilderWhere("Profesi");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->Profesi, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->Profesi->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field Hobi
+        $filter = $this->queryBuilderWhere("Hobi");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->Hobi, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->Hobi->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field AcaraID
+        $filter = $this->queryBuilderWhere("AcaraID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->AcaraID, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->AcaraID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field RadioID
+        $filter = $this->queryBuilderWhere("RadioID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->RadioID, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->RadioID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field Keterangan
+        $filter = $this->queryBuilderWhere("Keterangan");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->Keterangan, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->Keterangan->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
         if ($this->BasicSearch->Keyword != "") {
             $filterList .= "<div><span class=\"" . $captionClass . "\">" . $Language->phrase("BasicSearchKeyword") . "</span>" . $captionSuffix . $this->BasicSearch->Keyword . "</div>";
         }
@@ -1266,6 +1514,39 @@ class FansList extends Fans
         if ($this->BasicSearch->issetSession()) {
             return true;
         }
+        if ($this->FansID->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->Nama->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->Gender->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->NomorHP->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->TahunKelahiran->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->Kota->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->Profesi->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->Hobi->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->AcaraID->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->RadioID->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->Keterangan->AdvancedSearch->issetSession()) {
+            return true;
+        }
         return false;
     }
 
@@ -1278,6 +1559,12 @@ class FansList extends Fans
 
         // Clear basic search parameters
         $this->resetBasicSearchParms();
+
+        // Clear advanced search parameters
+        $this->resetAdvancedSearchParms();
+
+        // Clear queryBuilder
+        $this->setSessionRules("");
     }
 
     // Load advanced search default values
@@ -1292,6 +1579,22 @@ class FansList extends Fans
         $this->BasicSearch->unsetSession();
     }
 
+    // Clear all advanced search parameters
+    protected function resetAdvancedSearchParms()
+    {
+        $this->FansID->AdvancedSearch->unsetSession();
+        $this->Nama->AdvancedSearch->unsetSession();
+        $this->Gender->AdvancedSearch->unsetSession();
+        $this->NomorHP->AdvancedSearch->unsetSession();
+        $this->TahunKelahiran->AdvancedSearch->unsetSession();
+        $this->Kota->AdvancedSearch->unsetSession();
+        $this->Profesi->AdvancedSearch->unsetSession();
+        $this->Hobi->AdvancedSearch->unsetSession();
+        $this->AcaraID->AdvancedSearch->unsetSession();
+        $this->RadioID->AdvancedSearch->unsetSession();
+        $this->Keterangan->AdvancedSearch->unsetSession();
+    }
+
     // Restore all search parameters
     protected function restoreSearchParms()
     {
@@ -1299,6 +1602,19 @@ class FansList extends Fans
 
         // Restore basic search values
         $this->BasicSearch->load();
+
+        // Restore advanced search values
+        $this->FansID->AdvancedSearch->load();
+        $this->Nama->AdvancedSearch->load();
+        $this->Gender->AdvancedSearch->load();
+        $this->NomorHP->AdvancedSearch->load();
+        $this->TahunKelahiran->AdvancedSearch->load();
+        $this->Kota->AdvancedSearch->load();
+        $this->Profesi->AdvancedSearch->load();
+        $this->Hobi->AdvancedSearch->load();
+        $this->AcaraID->AdvancedSearch->load();
+        $this->RadioID->AdvancedSearch->load();
+        $this->Keterangan->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1967,6 +2283,109 @@ class FansList extends Fans
         $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
     }
 
+    // Load search values for validation
+    protected function loadSearchValues()
+    {
+        // Load search values
+        $hasValue = false;
+
+        // Load query builder rules
+        $rules = Post("rules");
+        if ($rules && $this->Command == "") {
+            $this->QueryRules = $rules;
+            $this->Command = "search";
+        }
+
+        // FansID
+        if ($this->FansID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->FansID->AdvancedSearch->SearchValue != "" || $this->FansID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // Nama
+        if ($this->Nama->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->Nama->AdvancedSearch->SearchValue != "" || $this->Nama->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // Gender
+        if ($this->Gender->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->Gender->AdvancedSearch->SearchValue != "" || $this->Gender->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // NomorHP
+        if ($this->NomorHP->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->NomorHP->AdvancedSearch->SearchValue != "" || $this->NomorHP->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // TahunKelahiran
+        if ($this->TahunKelahiran->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->TahunKelahiran->AdvancedSearch->SearchValue != "" || $this->TahunKelahiran->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // Kota
+        if ($this->Kota->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->Kota->AdvancedSearch->SearchValue != "" || $this->Kota->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // Profesi
+        if ($this->Profesi->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->Profesi->AdvancedSearch->SearchValue != "" || $this->Profesi->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // Hobi
+        if ($this->Hobi->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->Hobi->AdvancedSearch->SearchValue != "" || $this->Hobi->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // AcaraID
+        if ($this->AcaraID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->AcaraID->AdvancedSearch->SearchValue != "" || $this->AcaraID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // RadioID
+        if ($this->RadioID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->RadioID->AdvancedSearch->SearchValue != "" || $this->RadioID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // Keterangan
+        if ($this->Keterangan->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->Keterangan->AdvancedSearch->SearchValue != "" || $this->Keterangan->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+        return $hasValue;
+    }
+
     /**
      * Load result set
      *
@@ -2300,6 +2719,42 @@ class FansList extends Fans
         }
     }
 
+    // Validate search
+    protected function validateSearch()
+    {
+        // Check if validation required
+        if (!Config("SERVER_VALIDATE")) {
+            return true;
+        }
+
+        // Return validate result
+        $validateSearch = !$this->hasInvalidFields();
+
+        // Call Form_CustomValidate event
+        $formCustomError = "";
+        $validateSearch = $validateSearch && $this->formCustomValidate($formCustomError);
+        if ($formCustomError != "") {
+            $this->setFailureMessage($formCustomError);
+        }
+        return $validateSearch;
+    }
+
+    // Load advanced search
+    public function loadAdvancedSearch()
+    {
+        $this->FansID->AdvancedSearch->load();
+        $this->Nama->AdvancedSearch->load();
+        $this->Gender->AdvancedSearch->load();
+        $this->NomorHP->AdvancedSearch->load();
+        $this->TahunKelahiran->AdvancedSearch->load();
+        $this->Kota->AdvancedSearch->load();
+        $this->Profesi->AdvancedSearch->load();
+        $this->Hobi->AdvancedSearch->load();
+        $this->AcaraID->AdvancedSearch->load();
+        $this->RadioID->AdvancedSearch->load();
+        $this->Keterangan->AdvancedSearch->load();
+    }
+
     // Get export HTML tag
     protected function getExportTag($type, $custom = false)
     {
@@ -2425,6 +2880,24 @@ class FansList extends Fans
             $item->Body = "<a class=\"btn btn-default ew-show-all\" role=\"button\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" data-ew-action=\"refresh\" data-url=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
         }
         $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
+
+        // Advanced search button
+        $item = &$this->SearchOptions->add("advancedsearch");
+        if ($this->ModalSearch && !IsMobile()) {
+            $item->Body = "<a class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch", true) . "\" data-table=\"fans\" data-caption=\"" . $Language->phrase("AdvancedSearch", true) . "\" data-ew-action=\"modal\" data-url=\"fanssearch\" data-btn=\"SearchBtn\">" . $Language->phrase("AdvancedSearch", false) . "</a>";
+        } else {
+            $item->Body = "<a class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch", true) . "\" data-caption=\"" . $Language->phrase("AdvancedSearch", true) . "\" href=\"fanssearch\">" . $Language->phrase("AdvancedSearch", false) . "</a>";
+        }
+        $item->Visible = true;
+
+        // Query builder button
+        $item = &$this->SearchOptions->add("querybuilder");
+        if ($this->ModalSearch && !IsMobile()) {
+            $item->Body = "<a class=\"btn btn-default ew-query-builder\" title=\"" . $Language->phrase("QueryBuilder", true) . "\" data-table=\"fans\" data-caption=\"" . $Language->phrase("QueryBuilder", true) . "\" data-ew-action=\"modal\" data-url=\"fansquery\" data-btn=\"SearchBtn\">" . $Language->phrase("QueryBuilder", false) . "</a>";
+        } else {
+            $item->Body = "<a class=\"btn btn-default ew-query-builder\" title=\"" . $Language->phrase("QueryBuilder", true) . "\" data-caption=\"" . $Language->phrase("QueryBuilder", true) . "\" href=\"fansquery\">" . $Language->phrase("QueryBuilder", false) . "</a>";
+        }
+        $item->Visible = true;
 
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;

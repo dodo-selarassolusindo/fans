@@ -36,6 +36,8 @@
         clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
         clone ($p['PHPMaker2024\\prj_fans\\Attributes\\Get'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('PHPMaker2024\\prj_fans\\Attributes\\Get')),
         clone $p['PHPMaker2024\\prj_fans\\Attributes\\Get'],
         clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
@@ -58,6 +60,16 @@
     [
         'PHPMaker2024\\prj_fans\\Attributes\\Map' => [
             'methods' => [
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
                 [
                     'GET',
                     'POST',
@@ -347,6 +359,8 @@
                 '/fansview[/{FansID}]',
                 '/fansedit[/{FansID}]',
                 '/fansdelete[/{FansID}]',
+                '/fanssearch',
+                '/fansquery',
                 '/lokasilist[/{LokasiID}]',
                 '/lokasiadd[/{LokasiID}]',
                 '/lokasiview[/{LokasiID}]',
@@ -402,6 +416,8 @@
                 'PHPMaker2024\\prj_fans\\FansController:view',
                 'PHPMaker2024\\prj_fans\\FansController:edit',
                 'PHPMaker2024\\prj_fans\\FansController:delete',
+                'PHPMaker2024\\prj_fans\\FansController:search',
+                'PHPMaker2024\\prj_fans\\FansController:query',
                 'PHPMaker2024\\prj_fans\\LokasiController:list',
                 'PHPMaker2024\\prj_fans\\LokasiController:add',
                 'PHPMaker2024\\prj_fans\\LokasiController:view',
@@ -431,6 +447,12 @@
                 'PHPMaker2024\\prj_fans\\UserlevelsController:delete',
             ],
             'middleware' => [
+                [
+                    'PHPMaker2024\\prj_fans\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_fans\\PermissionMiddleware',
+                ],
                 [
                     'PHPMaker2024\\prj_fans\\PermissionMiddleware',
                 ],
@@ -616,6 +638,8 @@
                 'view.fans',
                 'edit.fans',
                 'delete.fans',
+                'search.fans',
+                'query.fans',
                 'list.lokasi',
                 'add.lokasi',
                 'view.lokasi',
@@ -645,6 +669,8 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -755,6 +781,8 @@
         $o[50],
         $o[51],
         $o[52],
+        $o[53],
+        $o[54],
     ],
     []
 );

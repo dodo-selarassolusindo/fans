@@ -57,6 +57,7 @@ C:\xampp\htdocs\fans\models\FansAdd.php
 C:\xampp\htdocs\fans\models\FansDelete.php
 C:\xampp\htdocs\fans\models\FansEdit.php
 C:\xampp\htdocs\fans\models\FansList.php
+C:\xampp\htdocs\fans\models\FansSearch.php
 C:\xampp\htdocs\fans\models\FansView.php
 C:\xampp\htdocs\fans\models\Login.php
 C:\xampp\htdocs\fans\models\Logout.php
@@ -257,6 +258,8 @@ C:\xampp\htdocs\fans\views\FansAdd.php
 C:\xampp\htdocs\fans\views\FansDelete.php
 C:\xampp\htdocs\fans\views\FansEdit.php
 C:\xampp\htdocs\fans\views\FansList.php
+C:\xampp\htdocs\fans\views\FansQuery.php
+C:\xampp\htdocs\fans\views\FansSearch.php
 C:\xampp\htdocs\fans\views\FansView.php
 C:\xampp\htdocs\fans\views\Login.php
 C:\xampp\htdocs\fans\views\LokasiAdd.php

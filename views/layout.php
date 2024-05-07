@@ -49,6 +49,8 @@ var cssjs = [];
 <?php foreach (array_merge(Config("STYLESHEET_FILES"), Config("JAVASCRIPT_FILES")) as $file) { // External Stylesheets and JavaScripts ?>
 cssjs.push("<?= (IsRemote($file) ? "" : BasePath(true)) . $file ?>?v=24.11.0");
 <?php } ?>
+cssjs.push(ew.PATH_BASE + "jquery/query-builder.min.js?v=24.11.0");
+cssjs.push(ew.PATH_BASE + "css/<?= CssFile("query-builder.css") ?>?v=24.11.0");
 var jqueryjs = [
     ew.PATH_BASE + "jquery/select2.full.min.js?v=24.11.0",
     ew.PATH_BASE + "jquery/jqueryfileupload.min.js?v=24.11.0",

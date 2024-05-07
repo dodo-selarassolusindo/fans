@@ -49,4 +49,18 @@ class FansController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "FansDelete");
     }
+
+    // search
+    #[Map(["GET","POST","OPTIONS"], "/fanssearch", [PermissionMiddleware::class], "search.fans")]
+    public function search(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "FansSearch");
+    }
+
+    // query
+    #[Map(["GET","POST","OPTIONS"], "/fansquery", [PermissionMiddleware::class], "query.fans")]
+    public function query(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "FansSearch", "FansQuery");
+    }
 }
