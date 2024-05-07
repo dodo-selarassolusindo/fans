@@ -33,11 +33,11 @@ loadjs.ready(["wrapper", "head"], function () {
             ["Gender", [fields.Gender.visible && fields.Gender.required ? ew.Validators.required(fields.Gender.caption) : null], fields.Gender.isInvalid],
             ["NomorHP", [fields.NomorHP.visible && fields.NomorHP.required ? ew.Validators.required(fields.NomorHP.caption) : null], fields.NomorHP.isInvalid],
             ["TahunKelahiran", [fields.TahunKelahiran.visible && fields.TahunKelahiran.required ? ew.Validators.required(fields.TahunKelahiran.caption) : null], fields.TahunKelahiran.isInvalid],
-            ["Kota", [fields.Kota.visible && fields.Kota.required ? ew.Validators.required(fields.Kota.caption) : null, ew.Validators.integer], fields.Kota.isInvalid],
+            ["Kota", [fields.Kota.visible && fields.Kota.required ? ew.Validators.required(fields.Kota.caption) : null], fields.Kota.isInvalid],
             ["Profesi", [fields.Profesi.visible && fields.Profesi.required ? ew.Validators.required(fields.Profesi.caption) : null], fields.Profesi.isInvalid],
             ["Hobi", [fields.Hobi.visible && fields.Hobi.required ? ew.Validators.required(fields.Hobi.caption) : null], fields.Hobi.isInvalid],
-            ["AcaraID", [fields.AcaraID.visible && fields.AcaraID.required ? ew.Validators.required(fields.AcaraID.caption) : null, ew.Validators.integer], fields.AcaraID.isInvalid],
-            ["RadioID", [fields.RadioID.visible && fields.RadioID.required ? ew.Validators.required(fields.RadioID.caption) : null, ew.Validators.integer], fields.RadioID.isInvalid],
+            ["AcaraID", [fields.AcaraID.visible && fields.AcaraID.required ? ew.Validators.required(fields.AcaraID.caption) : null], fields.AcaraID.isInvalid],
+            ["RadioID", [fields.RadioID.visible && fields.RadioID.required ? ew.Validators.required(fields.RadioID.caption) : null], fields.RadioID.isInvalid],
             ["Keterangan", [fields.Keterangan.visible && fields.Keterangan.required ? ew.Validators.required(fields.Keterangan.caption) : null], fields.Keterangan.isInvalid]
         ])
 
@@ -55,6 +55,9 @@ loadjs.ready(["wrapper", "head"], function () {
         // Dynamic selection lists
         .setLists({
             "Gender": <?= $Page->Gender->toClientList($Page) ?>,
+            "Kota": <?= $Page->Kota->toClientList($Page) ?>,
+            "AcaraID": <?= $Page->AcaraID->toClientList($Page) ?>,
+            "RadioID": <?= $Page->RadioID->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -163,9 +166,35 @@ loadjs.ready("head", function () {
         <label id="elh_fans_Kota" for="x_Kota" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Kota->caption() ?><?= $Page->Kota->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Kota->cellAttributes() ?>>
 <span id="el_fans_Kota">
-<input type="<?= $Page->Kota->getInputTextType() ?>" name="x_Kota" id="x_Kota" data-table="fans" data-field="x_Kota" value="<?= $Page->Kota->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->Kota->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Kota->formatPattern()) ?>"<?= $Page->Kota->editAttributes() ?> aria-describedby="x_Kota_help">
-<?= $Page->Kota->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->Kota->getErrorMessage() ?></div>
+    <select
+        id="x_Kota"
+        name="x_Kota"
+        class="form-control ew-select<?= $Page->Kota->isInvalidClass() ?>"
+        data-select2-id="ffansedit_x_Kota"
+        data-table="fans"
+        data-field="x_Kota"
+        data-caption="<?= HtmlEncode(RemoveHtml($Page->Kota->caption())) ?>"
+        data-modal-lookup="true"
+        data-value-separator="<?= $Page->Kota->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->Kota->getPlaceHolder()) ?>"
+        <?= $Page->Kota->editAttributes() ?>>
+        <?= $Page->Kota->selectOptionListHtml("x_Kota") ?>
+    </select>
+    <?= $Page->Kota->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->Kota->getErrorMessage() ?></div>
+<?= $Page->Kota->Lookup->getParamTag($Page, "p_x_Kota") ?>
+<script>
+loadjs.ready("ffansedit", function() {
+    var options = { name: "x_Kota", selectId: "ffansedit_x_Kota" };
+    if (ffansedit.lists.Kota?.lookupOptions.length) {
+        options.data = { id: "x_Kota", form: "ffansedit" };
+    } else {
+        options.ajax = { id: "x_Kota", form: "ffansedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options = Object.assign({}, ew.modalLookupOptions, options, ew.vars.tables.fans.fields.Kota.modalLookupOptions);
+    ew.createModalLookup(options);
+});
+</script>
 </span>
 </div></div>
     </div>
@@ -199,9 +228,35 @@ loadjs.ready("head", function () {
         <label id="elh_fans_AcaraID" for="x_AcaraID" class="<?= $Page->LeftColumnClass ?>"><?= $Page->AcaraID->caption() ?><?= $Page->AcaraID->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->AcaraID->cellAttributes() ?>>
 <span id="el_fans_AcaraID">
-<input type="<?= $Page->AcaraID->getInputTextType() ?>" name="x_AcaraID" id="x_AcaraID" data-table="fans" data-field="x_AcaraID" value="<?= $Page->AcaraID->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->AcaraID->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->AcaraID->formatPattern()) ?>"<?= $Page->AcaraID->editAttributes() ?> aria-describedby="x_AcaraID_help">
-<?= $Page->AcaraID->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->AcaraID->getErrorMessage() ?></div>
+    <select
+        id="x_AcaraID"
+        name="x_AcaraID"
+        class="form-control ew-select<?= $Page->AcaraID->isInvalidClass() ?>"
+        data-select2-id="ffansedit_x_AcaraID"
+        data-table="fans"
+        data-field="x_AcaraID"
+        data-caption="<?= HtmlEncode(RemoveHtml($Page->AcaraID->caption())) ?>"
+        data-modal-lookup="true"
+        data-value-separator="<?= $Page->AcaraID->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->AcaraID->getPlaceHolder()) ?>"
+        <?= $Page->AcaraID->editAttributes() ?>>
+        <?= $Page->AcaraID->selectOptionListHtml("x_AcaraID") ?>
+    </select>
+    <?= $Page->AcaraID->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->AcaraID->getErrorMessage() ?></div>
+<?= $Page->AcaraID->Lookup->getParamTag($Page, "p_x_AcaraID") ?>
+<script>
+loadjs.ready("ffansedit", function() {
+    var options = { name: "x_AcaraID", selectId: "ffansedit_x_AcaraID" };
+    if (ffansedit.lists.AcaraID?.lookupOptions.length) {
+        options.data = { id: "x_AcaraID", form: "ffansedit" };
+    } else {
+        options.ajax = { id: "x_AcaraID", form: "ffansedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options = Object.assign({}, ew.modalLookupOptions, options, ew.vars.tables.fans.fields.AcaraID.modalLookupOptions);
+    ew.createModalLookup(options);
+});
+</script>
 </span>
 </div></div>
     </div>
@@ -211,9 +266,35 @@ loadjs.ready("head", function () {
         <label id="elh_fans_RadioID" for="x_RadioID" class="<?= $Page->LeftColumnClass ?>"><?= $Page->RadioID->caption() ?><?= $Page->RadioID->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->RadioID->cellAttributes() ?>>
 <span id="el_fans_RadioID">
-<input type="<?= $Page->RadioID->getInputTextType() ?>" name="x_RadioID" id="x_RadioID" data-table="fans" data-field="x_RadioID" value="<?= $Page->RadioID->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->RadioID->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->RadioID->formatPattern()) ?>"<?= $Page->RadioID->editAttributes() ?> aria-describedby="x_RadioID_help">
-<?= $Page->RadioID->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->RadioID->getErrorMessage() ?></div>
+    <select
+        id="x_RadioID"
+        name="x_RadioID"
+        class="form-control ew-select<?= $Page->RadioID->isInvalidClass() ?>"
+        data-select2-id="ffansedit_x_RadioID"
+        data-table="fans"
+        data-field="x_RadioID"
+        data-caption="<?= HtmlEncode(RemoveHtml($Page->RadioID->caption())) ?>"
+        data-modal-lookup="true"
+        data-value-separator="<?= $Page->RadioID->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->RadioID->getPlaceHolder()) ?>"
+        <?= $Page->RadioID->editAttributes() ?>>
+        <?= $Page->RadioID->selectOptionListHtml("x_RadioID") ?>
+    </select>
+    <?= $Page->RadioID->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->RadioID->getErrorMessage() ?></div>
+<?= $Page->RadioID->Lookup->getParamTag($Page, "p_x_RadioID") ?>
+<script>
+loadjs.ready("ffansedit", function() {
+    var options = { name: "x_RadioID", selectId: "ffansedit_x_RadioID" };
+    if (ffansedit.lists.RadioID?.lookupOptions.length) {
+        options.data = { id: "x_RadioID", form: "ffansedit" };
+    } else {
+        options.ajax = { id: "x_RadioID", form: "ffansedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options = Object.assign({}, ew.modalLookupOptions, options, ew.vars.tables.fans.fields.RadioID.modalLookupOptions);
+    ew.createModalLookup(options);
+});
+</script>
 </span>
 </div></div>
     </div>

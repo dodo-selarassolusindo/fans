@@ -243,14 +243,18 @@ class Fans extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->Kota->InputTextType = "text";
         $this->Kota->Raw = true;
         $this->Kota->Nullable = false; // NOT NULL field
         $this->Kota->Required = true; // Required field
+        $this->Kota->setSelectMultiple(false); // Select one
+        $this->Kota->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->Kota->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->Kota->Lookup = new Lookup($this->Kota, 'lokasi', false, 'LokasiID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
         $this->Kota->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Kota->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Kota->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Kota'] = &$this->Kota;
 
         // Profesi
@@ -313,12 +317,16 @@ class Fans extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->AcaraID->InputTextType = "text";
         $this->AcaraID->Raw = true;
+        $this->AcaraID->setSelectMultiple(false); // Select one
+        $this->AcaraID->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->AcaraID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->AcaraID->Lookup = new Lookup($this->AcaraID, 'acara', false, 'AcaraID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
         $this->AcaraID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->AcaraID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->AcaraID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['AcaraID'] = &$this->AcaraID;
 
         // RadioID
@@ -337,12 +345,16 @@ class Fans extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->RadioID->InputTextType = "text";
         $this->RadioID->Raw = true;
+        $this->RadioID->setSelectMultiple(false); // Select one
+        $this->RadioID->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->RadioID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->RadioID->Lookup = new Lookup($this->RadioID, 'radio', false, 'RadioID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
         $this->RadioID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->RadioID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->RadioID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['RadioID'] = &$this->RadioID;
 
         // Keterangan
@@ -1338,8 +1350,27 @@ class Fans extends DbTable
         $this->TahunKelahiran->ViewValue = $this->TahunKelahiran->CurrentValue;
 
         // Kota
-        $this->Kota->ViewValue = $this->Kota->CurrentValue;
-        $this->Kota->ViewValue = FormatNumber($this->Kota->ViewValue, $this->Kota->formatPattern());
+        $curVal = strval($this->Kota->CurrentValue);
+        if ($curVal != "") {
+            $this->Kota->ViewValue = $this->Kota->lookupCacheOption($curVal);
+            if ($this->Kota->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->Kota->Lookup->getTable()->Fields["LokasiID"]->searchExpression(), "=", $curVal, $this->Kota->Lookup->getTable()->Fields["LokasiID"]->searchDataType(), "");
+                $sqlWrk = $this->Kota->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->Kota->Lookup->renderViewRow($rswrk[0]);
+                    $this->Kota->ViewValue = $this->Kota->displayValue($arwrk);
+                } else {
+                    $this->Kota->ViewValue = FormatNumber($this->Kota->CurrentValue, $this->Kota->formatPattern());
+                }
+            }
+        } else {
+            $this->Kota->ViewValue = null;
+        }
 
         // Profesi
         $this->Profesi->ViewValue = $this->Profesi->CurrentValue;
@@ -1348,12 +1379,50 @@ class Fans extends DbTable
         $this->Hobi->ViewValue = $this->Hobi->CurrentValue;
 
         // AcaraID
-        $this->AcaraID->ViewValue = $this->AcaraID->CurrentValue;
-        $this->AcaraID->ViewValue = FormatNumber($this->AcaraID->ViewValue, $this->AcaraID->formatPattern());
+        $curVal = strval($this->AcaraID->CurrentValue);
+        if ($curVal != "") {
+            $this->AcaraID->ViewValue = $this->AcaraID->lookupCacheOption($curVal);
+            if ($this->AcaraID->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->AcaraID->Lookup->getTable()->Fields["AcaraID"]->searchExpression(), "=", $curVal, $this->AcaraID->Lookup->getTable()->Fields["AcaraID"]->searchDataType(), "");
+                $sqlWrk = $this->AcaraID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->AcaraID->Lookup->renderViewRow($rswrk[0]);
+                    $this->AcaraID->ViewValue = $this->AcaraID->displayValue($arwrk);
+                } else {
+                    $this->AcaraID->ViewValue = FormatNumber($this->AcaraID->CurrentValue, $this->AcaraID->formatPattern());
+                }
+            }
+        } else {
+            $this->AcaraID->ViewValue = null;
+        }
 
         // RadioID
-        $this->RadioID->ViewValue = $this->RadioID->CurrentValue;
-        $this->RadioID->ViewValue = FormatNumber($this->RadioID->ViewValue, $this->RadioID->formatPattern());
+        $curVal = strval($this->RadioID->CurrentValue);
+        if ($curVal != "") {
+            $this->RadioID->ViewValue = $this->RadioID->lookupCacheOption($curVal);
+            if ($this->RadioID->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->RadioID->Lookup->getTable()->Fields["RadioID"]->searchExpression(), "=", $curVal, $this->RadioID->Lookup->getTable()->Fields["RadioID"]->searchDataType(), "");
+                $sqlWrk = $this->RadioID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->RadioID->Lookup->renderViewRow($rswrk[0]);
+                    $this->RadioID->ViewValue = $this->RadioID->displayValue($arwrk);
+                } else {
+                    $this->RadioID->ViewValue = FormatNumber($this->RadioID->CurrentValue, $this->RadioID->formatPattern());
+                }
+            }
+        } else {
+            $this->RadioID->ViewValue = null;
+        }
 
         // Keterangan
         $this->Keterangan->ViewValue = $this->Keterangan->CurrentValue;
@@ -1451,11 +1520,7 @@ class Fans extends DbTable
 
         // Kota
         $this->Kota->setupEditAttributes();
-        $this->Kota->EditValue = $this->Kota->CurrentValue;
         $this->Kota->PlaceHolder = RemoveHtml($this->Kota->caption());
-        if (strval($this->Kota->EditValue) != "" && is_numeric($this->Kota->EditValue)) {
-            $this->Kota->EditValue = FormatNumber($this->Kota->EditValue, null);
-        }
 
         // Profesi
         $this->Profesi->setupEditAttributes();
@@ -1475,19 +1540,11 @@ class Fans extends DbTable
 
         // AcaraID
         $this->AcaraID->setupEditAttributes();
-        $this->AcaraID->EditValue = $this->AcaraID->CurrentValue;
         $this->AcaraID->PlaceHolder = RemoveHtml($this->AcaraID->caption());
-        if (strval($this->AcaraID->EditValue) != "" && is_numeric($this->AcaraID->EditValue)) {
-            $this->AcaraID->EditValue = FormatNumber($this->AcaraID->EditValue, null);
-        }
 
         // RadioID
         $this->RadioID->setupEditAttributes();
-        $this->RadioID->EditValue = $this->RadioID->CurrentValue;
         $this->RadioID->PlaceHolder = RemoveHtml($this->RadioID->caption());
-        if (strval($this->RadioID->EditValue) != "" && is_numeric($this->RadioID->EditValue)) {
-            $this->RadioID->EditValue = FormatNumber($this->RadioID->EditValue, null);
-        }
 
         // Keterangan
         $this->Keterangan->setupEditAttributes();

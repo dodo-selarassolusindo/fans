@@ -698,6 +698,9 @@ class FansList extends Fans
 
         // Set up lookup cache
         $this->setupLookupOptions($this->Gender);
+        $this->setupLookupOptions($this->Kota);
+        $this->setupLookupOptions($this->AcaraID);
+        $this->setupLookupOptions($this->RadioID);
 
         // Update form name to avoid conflict
         if ($this->IsModal) {
@@ -2139,8 +2142,27 @@ class FansList extends Fans
             $this->TahunKelahiran->ViewValue = $this->TahunKelahiran->CurrentValue;
 
             // Kota
-            $this->Kota->ViewValue = $this->Kota->CurrentValue;
-            $this->Kota->ViewValue = FormatNumber($this->Kota->ViewValue, $this->Kota->formatPattern());
+            $curVal = strval($this->Kota->CurrentValue);
+            if ($curVal != "") {
+                $this->Kota->ViewValue = $this->Kota->lookupCacheOption($curVal);
+                if ($this->Kota->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->Kota->Lookup->getTable()->Fields["LokasiID"]->searchExpression(), "=", $curVal, $this->Kota->Lookup->getTable()->Fields["LokasiID"]->searchDataType(), "");
+                    $sqlWrk = $this->Kota->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->Kota->Lookup->renderViewRow($rswrk[0]);
+                        $this->Kota->ViewValue = $this->Kota->displayValue($arwrk);
+                    } else {
+                        $this->Kota->ViewValue = FormatNumber($this->Kota->CurrentValue, $this->Kota->formatPattern());
+                    }
+                }
+            } else {
+                $this->Kota->ViewValue = null;
+            }
 
             // Profesi
             $this->Profesi->ViewValue = $this->Profesi->CurrentValue;
@@ -2149,12 +2171,50 @@ class FansList extends Fans
             $this->Hobi->ViewValue = $this->Hobi->CurrentValue;
 
             // AcaraID
-            $this->AcaraID->ViewValue = $this->AcaraID->CurrentValue;
-            $this->AcaraID->ViewValue = FormatNumber($this->AcaraID->ViewValue, $this->AcaraID->formatPattern());
+            $curVal = strval($this->AcaraID->CurrentValue);
+            if ($curVal != "") {
+                $this->AcaraID->ViewValue = $this->AcaraID->lookupCacheOption($curVal);
+                if ($this->AcaraID->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->AcaraID->Lookup->getTable()->Fields["AcaraID"]->searchExpression(), "=", $curVal, $this->AcaraID->Lookup->getTable()->Fields["AcaraID"]->searchDataType(), "");
+                    $sqlWrk = $this->AcaraID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->AcaraID->Lookup->renderViewRow($rswrk[0]);
+                        $this->AcaraID->ViewValue = $this->AcaraID->displayValue($arwrk);
+                    } else {
+                        $this->AcaraID->ViewValue = FormatNumber($this->AcaraID->CurrentValue, $this->AcaraID->formatPattern());
+                    }
+                }
+            } else {
+                $this->AcaraID->ViewValue = null;
+            }
 
             // RadioID
-            $this->RadioID->ViewValue = $this->RadioID->CurrentValue;
-            $this->RadioID->ViewValue = FormatNumber($this->RadioID->ViewValue, $this->RadioID->formatPattern());
+            $curVal = strval($this->RadioID->CurrentValue);
+            if ($curVal != "") {
+                $this->RadioID->ViewValue = $this->RadioID->lookupCacheOption($curVal);
+                if ($this->RadioID->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->RadioID->Lookup->getTable()->Fields["RadioID"]->searchExpression(), "=", $curVal, $this->RadioID->Lookup->getTable()->Fields["RadioID"]->searchDataType(), "");
+                    $sqlWrk = $this->RadioID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->RadioID->Lookup->renderViewRow($rswrk[0]);
+                        $this->RadioID->ViewValue = $this->RadioID->displayValue($arwrk);
+                    } else {
+                        $this->RadioID->ViewValue = FormatNumber($this->RadioID->CurrentValue, $this->RadioID->formatPattern());
+                    }
+                }
+            } else {
+                $this->RadioID->ViewValue = null;
+            }
 
             // Keterangan
             $this->Keterangan->ViewValue = $this->Keterangan->CurrentValue;
@@ -2290,6 +2350,12 @@ class FansList extends Fans
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_Gender":
+                    break;
+                case "x_Kota":
+                    break;
+                case "x_AcaraID":
+                    break;
+                case "x_RadioID":
                     break;
                 default:
                     $lookupFilter = "";

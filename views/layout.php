@@ -396,6 +396,8 @@ loadjs.done("wrapper");
 </script>
 <!-- modal dialog -->
 <div id="ew-modal-dialog" class="modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="ew-modal-dialog-title" aria-hidden="true"><div class="modal-dialog modal-fullscreen-sm-down"><div class="modal-content"><div class="modal-header"><h5 id="ew-modal-dialog-title" class="modal-title"></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?= $Language->phrase("CloseBtn") ?>"></button></div><div class="modal-body"></div><div class="modal-footer"></div></div></div></div>
+<!-- modal lookup dialog -->
+<div id="ew-modal-lookup-dialog" class="modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="ew-modal-lookup-dialog-title" aria-hidden="true"><div class="modal-dialog modal-fullscreen-sm-down"><div class="modal-content"><div class="modal-header"><h5 id="ew-modal-lookup-dialog-title" class="modal-title"></h5></div><div class="modal-body p-0"></div><div class="modal-footer"><button type="button" class="btn btn-primary ew-btn" data-value="true" data-bs-dismiss="modal"><?= $Language->phrase("OKBtn") ?></button><button type="button" class="btn btn-default ew-btn" data-value="false" data-bs-dismiss="modal"><?= $Language->phrase("CancelBtn") ?></button></div></div></div></div>
 <!-- image cropper dialog -->
 <div id="ew-cropper-dialog" class="modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="ew-cropper-dialog-title" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-fullscreen-sm-down">
