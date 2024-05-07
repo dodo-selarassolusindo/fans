@@ -274,7 +274,7 @@ $CONFIG = [
      * Database time zone
      * Difference to Greenwich time (GMT) with colon between hours and minutes, e.g. +02:00
      */
-    "DB_TIME_ZONE" => "Asia/Jakarta",
+    "DB_TIME_ZONE" => "",
 
     /**
      * MySQL charset (for SET NAMES statement, not used by default)
