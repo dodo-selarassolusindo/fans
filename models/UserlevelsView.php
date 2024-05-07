@@ -58,6 +58,14 @@ class UserlevelsView extends Userlevels
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -724,6 +732,9 @@ class UserlevelsView extends Userlevels
 
         // Call Row Selected event
         $this->rowSelected($row);
+        if ($this->AuditTrailOnView) {
+            $this->writeAuditTrailOnView($row);
+        }
         $this->userlevelid->setDbValue($row['userlevelid']);
         $this->userlevelid->CurrentValue = (int)$this->userlevelid->CurrentValue;
         $this->userlevelname->setDbValue($row['userlevelname']);

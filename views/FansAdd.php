@@ -290,7 +290,7 @@ loadjs.ready("ffansadd", function() {
         <label id="elh_fans_Keterangan" for="x_Keterangan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Keterangan->caption() ?><?= $Page->Keterangan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Keterangan->cellAttributes() ?>>
 <span id="el_fans_Keterangan">
-<input type="<?= $Page->Keterangan->getInputTextType() ?>" name="x_Keterangan" id="x_Keterangan" data-table="fans" data-field="x_Keterangan" value="<?= $Page->Keterangan->EditValue ?>" size="30" maxlength="65535" placeholder="<?= HtmlEncode($Page->Keterangan->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Keterangan->formatPattern()) ?>"<?= $Page->Keterangan->editAttributes() ?> aria-describedby="x_Keterangan_help">
+<textarea data-table="fans" data-field="x_Keterangan" name="x_Keterangan" id="x_Keterangan" cols="35" rows="2" placeholder="<?= HtmlEncode($Page->Keterangan->getPlaceHolder()) ?>"<?= $Page->Keterangan->editAttributes() ?> aria-describedby="x_Keterangan_help"><?= $Page->Keterangan->EditValue ?></textarea>
 <?= $Page->Keterangan->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->Keterangan->getErrorMessage() ?></div>
 </span>

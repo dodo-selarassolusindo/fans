@@ -58,6 +58,14 @@ class UserlevelpermissionsView extends Userlevelpermissions
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -741,6 +749,9 @@ class UserlevelpermissionsView extends Userlevelpermissions
 
         // Call Row Selected event
         $this->rowSelected($row);
+        if ($this->AuditTrailOnView) {
+            $this->writeAuditTrailOnView($row);
+        }
         $this->userlevelid->setDbValue($row['userlevelid']);
         $this->_tablename->setDbValue($row['tablename']);
         $this->_permission->setDbValue($row['permission']);

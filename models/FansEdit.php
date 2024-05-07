@@ -40,6 +40,14 @@ class FansEdit extends Fans
     // CSS class/style
     public $CurrentPageName = "fansedit";
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -1250,9 +1258,6 @@ class FansEdit extends Fans
 
             // Keterangan
             $this->Keterangan->setupEditAttributes();
-            if (!$this->Keterangan->Raw) {
-                $this->Keterangan->CurrentValue = HtmlDecode($this->Keterangan->CurrentValue);
-            }
             $this->Keterangan->EditValue = HtmlEncode($this->Keterangan->CurrentValue);
             $this->Keterangan->PlaceHolder = RemoveHtml($this->Keterangan->caption());
 

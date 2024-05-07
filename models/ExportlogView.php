@@ -58,6 +58,14 @@ class ExportlogView extends Exportlog
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -730,6 +738,9 @@ class ExportlogView extends Exportlog
 
         // Call Row Selected event
         $this->rowSelected($row);
+        if ($this->AuditTrailOnView) {
+            $this->writeAuditTrailOnView($row);
+        }
         $this->FileId->setDbValue($row['FileId']);
         $this->DateTime->setDbValue($row['DateTime']);
         $this->User->setDbValue($row['User']);
