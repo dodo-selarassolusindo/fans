@@ -116,6 +116,7 @@ class Employees extends DbTable
         $this->GridAddRowCount = 5;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
         $this->UseAjaxActions = $this->UseAjaxActions || Config("USE_AJAX_ACTIONS");
+        $this->UseColumnVisibility = true;
         $this->BasicSearch = new BasicSearch($this);
 
         // EmployeeID
