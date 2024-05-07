@@ -44,7 +44,7 @@ class PersonalData
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "exportlogdelete";
+    public $CurrentPageName = "exportlogview";
 
     // Page headings
     public $Heading = "";

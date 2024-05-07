@@ -22,31 +22,10 @@ class AudittrailController extends ControllerBase
         return $this->runPage($request, $response, $args, "AudittrailList");
     }
 
-    // add
-    #[Map(["GET","POST","OPTIONS"], "/audittrailadd[/{Id}]", [PermissionMiddleware::class], "add.audittrail")]
-    public function add(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "AudittrailAdd");
-    }
-
     // view
     #[Map(["GET","POST","OPTIONS"], "/audittrailview[/{Id}]", [PermissionMiddleware::class], "view.audittrail")]
     public function view(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "AudittrailView");
-    }
-
-    // edit
-    #[Map(["GET","POST","OPTIONS"], "/audittrailedit[/{Id}]", [PermissionMiddleware::class], "edit.audittrail")]
-    public function edit(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "AudittrailEdit");
-    }
-
-    // delete
-    #[Map(["GET","POST","OPTIONS"], "/audittraildelete[/{Id}]", [PermissionMiddleware::class], "delete.audittrail")]
-    public function delete(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "AudittrailDelete");
     }
 }
