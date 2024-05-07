@@ -1694,37 +1694,37 @@ class FansList extends Fans
         // Add group option item ("button")
         $item = &$this->ListOptions->addGroupOption();
         $item->Body = "";
-        $item->OnLeft = false;
+        $item->OnLeft = true;
         $item->Visible = false;
 
         // "view"
         $item = &$this->ListOptions->add("view");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canView();
-        $item->OnLeft = false;
+        $item->OnLeft = true;
 
         // "edit"
         $item = &$this->ListOptions->add("edit");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canEdit();
-        $item->OnLeft = false;
+        $item->OnLeft = true;
 
         // "copy"
         $item = &$this->ListOptions->add("copy");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canAdd();
-        $item->OnLeft = false;
+        $item->OnLeft = true;
 
         // "delete"
         $item = &$this->ListOptions->add("delete");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canDelete();
-        $item->OnLeft = false;
+        $item->OnLeft = true;
 
         // List actions
         $item = &$this->ListOptions->add("listactions");
         $item->CssClass = "text-nowrap";
-        $item->OnLeft = false;
+        $item->OnLeft = true;
         $item->Visible = false;
         $item->ShowInButtonGroup = false;
         $item->ShowInDropDown = false;
@@ -1732,7 +1732,7 @@ class FansList extends Fans
         // "checkbox"
         $item = &$this->ListOptions->add("checkbox");
         $item->Visible = false;
-        $item->OnLeft = false;
+        $item->OnLeft = true;
         $item->Header = "<div class=\"form-check\"><input type=\"checkbox\" name=\"key\" id=\"key\" class=\"form-check-input\" data-ew-action=\"select-all-keys\"></div>";
         if ($item->OnLeft) {
             $item->moveTo(0);
