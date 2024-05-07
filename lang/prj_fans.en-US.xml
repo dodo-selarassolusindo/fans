@@ -146,6 +146,10 @@
       </field>
       <field id="gender">
         <phrase id="fldcaption" value="Gender" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Laki-laki" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="Perempuan" />
       </field>
       <field id="nomorhp">
         <phrase id="fldcaption" value="Nomor HP" />

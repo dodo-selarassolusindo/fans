@@ -538,6 +538,9 @@ class FansView extends Fans
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->Gender);
+
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
@@ -816,8 +819,11 @@ class FansView extends Fans
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
             // Gender
-            $this->Gender->ViewValue = $this->Gender->CurrentValue;
-            $this->Gender->ViewValue = FormatNumber($this->Gender->ViewValue, $this->Gender->formatPattern());
+            if (strval($this->Gender->CurrentValue) != "") {
+                $this->Gender->ViewValue = $this->Gender->optionCaption($this->Gender->CurrentValue);
+            } else {
+                $this->Gender->ViewValue = null;
+            }
 
             // NomorHP
             $this->NomorHP->ViewValue = $this->NomorHP->CurrentValue;
@@ -921,6 +927,8 @@ class FansView extends Fans
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_Gender":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

@@ -171,12 +171,14 @@ class Fans extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'RADIO' // Edit Tag
         );
         $this->Gender->InputTextType = "text";
         $this->Gender->Raw = true;
+        $this->Gender->Lookup = new Lookup($this->Gender, 'fans', false, '', ["","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
+        $this->Gender->OptionCount = 2;
         $this->Gender->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Gender->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->Gender->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['Gender'] = &$this->Gender;
 
         // NomorHP
@@ -1323,8 +1325,11 @@ class Fans extends DbTable
         $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
         // Gender
-        $this->Gender->ViewValue = $this->Gender->CurrentValue;
-        $this->Gender->ViewValue = FormatNumber($this->Gender->ViewValue, $this->Gender->formatPattern());
+        if (strval($this->Gender->CurrentValue) != "") {
+            $this->Gender->ViewValue = $this->Gender->optionCaption($this->Gender->CurrentValue);
+        } else {
+            $this->Gender->ViewValue = null;
+        }
 
         // NomorHP
         $this->NomorHP->ViewValue = $this->NomorHP->CurrentValue;
@@ -1425,12 +1430,8 @@ class Fans extends DbTable
         $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
         // Gender
-        $this->Gender->setupEditAttributes();
-        $this->Gender->EditValue = $this->Gender->CurrentValue;
+        $this->Gender->EditValue = $this->Gender->options(false);
         $this->Gender->PlaceHolder = RemoveHtml($this->Gender->caption());
-        if (strval($this->Gender->EditValue) != "" && is_numeric($this->Gender->EditValue)) {
-            $this->Gender->EditValue = FormatNumber($this->Gender->EditValue, null);
-        }
 
         // NomorHP
         $this->NomorHP->setupEditAttributes();

@@ -696,6 +696,9 @@ class FansList extends Fans
         // Setup other options
         $this->setupOtherOptions();
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->Gender);
+
         // Update form name to avoid conflict
         if ($this->IsModal) {
             $this->FormName = "ffansgrid";
@@ -2123,8 +2126,11 @@ class FansList extends Fans
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
             // Gender
-            $this->Gender->ViewValue = $this->Gender->CurrentValue;
-            $this->Gender->ViewValue = FormatNumber($this->Gender->ViewValue, $this->Gender->formatPattern());
+            if (strval($this->Gender->CurrentValue) != "") {
+                $this->Gender->ViewValue = $this->Gender->optionCaption($this->Gender->CurrentValue);
+            } else {
+                $this->Gender->ViewValue = null;
+            }
 
             // NomorHP
             $this->NomorHP->ViewValue = $this->NomorHP->CurrentValue;
@@ -2283,6 +2289,8 @@ class FansList extends Fans
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_Gender":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

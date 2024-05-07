@@ -513,6 +513,9 @@ class FansAdd extends Fans
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->Gender);
+
         // Load default values for add
         $this->loadDefaultValues();
 
@@ -688,7 +691,7 @@ class FansAdd extends Fans
             if (IsApi() && $val === null) {
                 $this->Gender->Visible = false; // Disable update for API request
             } else {
-                $this->Gender->setFormValue($val, true, $validate);
+                $this->Gender->setFormValue($val);
             }
         }
 
@@ -934,8 +937,11 @@ class FansAdd extends Fans
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
             // Gender
-            $this->Gender->ViewValue = $this->Gender->CurrentValue;
-            $this->Gender->ViewValue = FormatNumber($this->Gender->ViewValue, $this->Gender->formatPattern());
+            if (strval($this->Gender->CurrentValue) != "") {
+                $this->Gender->ViewValue = $this->Gender->optionCaption($this->Gender->CurrentValue);
+            } else {
+                $this->Gender->ViewValue = null;
+            }
 
             // NomorHP
             $this->NomorHP->ViewValue = $this->NomorHP->CurrentValue;
@@ -1003,12 +1009,8 @@ class FansAdd extends Fans
             $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
             // Gender
-            $this->Gender->setupEditAttributes();
-            $this->Gender->EditValue = $this->Gender->CurrentValue;
+            $this->Gender->EditValue = $this->Gender->options(false);
             $this->Gender->PlaceHolder = RemoveHtml($this->Gender->caption());
-            if (strval($this->Gender->EditValue) != "" && is_numeric($this->Gender->EditValue)) {
-                $this->Gender->EditValue = FormatNumber($this->Gender->EditValue, null);
-            }
 
             // NomorHP
             $this->NomorHP->setupEditAttributes();
@@ -1132,12 +1134,9 @@ class FansAdd extends Fans
                 }
             }
             if ($this->Gender->Visible && $this->Gender->Required) {
-                if (!$this->Gender->IsDetailKey && EmptyValue($this->Gender->FormValue)) {
+                if ($this->Gender->FormValue == "") {
                     $this->Gender->addErrorMessage(str_replace("%s", $this->Gender->caption(), $this->Gender->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->Gender->FormValue)) {
-                $this->Gender->addErrorMessage($this->Gender->getErrorMessage(false));
             }
             if ($this->NomorHP->Visible && $this->NomorHP->Required) {
                 if (!$this->NomorHP->IsDetailKey && EmptyValue($this->NomorHP->FormValue)) {
@@ -1353,6 +1352,8 @@ class FansAdd extends Fans
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_Gender":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

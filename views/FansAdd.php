@@ -23,7 +23,7 @@ loadjs.ready(["wrapper", "head"], function () {
         // Add fields
         .setFields([
             ["Nama", [fields.Nama.visible && fields.Nama.required ? ew.Validators.required(fields.Nama.caption) : null], fields.Nama.isInvalid],
-            ["Gender", [fields.Gender.visible && fields.Gender.required ? ew.Validators.required(fields.Gender.caption) : null, ew.Validators.integer], fields.Gender.isInvalid],
+            ["Gender", [fields.Gender.visible && fields.Gender.required ? ew.Validators.required(fields.Gender.caption) : null], fields.Gender.isInvalid],
             ["NomorHP", [fields.NomorHP.visible && fields.NomorHP.required ? ew.Validators.required(fields.NomorHP.caption) : null], fields.NomorHP.isInvalid],
             ["TahunKelahiran", [fields.TahunKelahiran.visible && fields.TahunKelahiran.required ? ew.Validators.required(fields.TahunKelahiran.caption) : null], fields.TahunKelahiran.isInvalid],
             ["Kota", [fields.Kota.visible && fields.Kota.required ? ew.Validators.required(fields.Kota.caption) : null, ew.Validators.integer], fields.Kota.isInvalid],
@@ -47,6 +47,7 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "Gender": <?= $Page->Gender->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -90,10 +91,29 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->Gender->Visible) { // Gender ?>
     <div id="r_Gender"<?= $Page->Gender->rowAttributes() ?>>
-        <label id="elh_fans_Gender" for="x_Gender" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Gender->caption() ?><?= $Page->Gender->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_fans_Gender" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Gender->caption() ?><?= $Page->Gender->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Gender->cellAttributes() ?>>
 <span id="el_fans_Gender">
-<input type="<?= $Page->Gender->getInputTextType() ?>" name="x_Gender" id="x_Gender" data-table="fans" data-field="x_Gender" value="<?= $Page->Gender->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->Gender->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Gender->formatPattern()) ?>"<?= $Page->Gender->editAttributes() ?> aria-describedby="x_Gender_help">
+<template id="tp_x_Gender">
+    <div class="form-check">
+        <input type="radio" class="form-check-input" data-table="fans" data-field="x_Gender" name="x_Gender" id="x_Gender"<?= $Page->Gender->editAttributes() ?>>
+        <label class="form-check-label"></label>
+    </div>
+</template>
+<div id="dsl_x_Gender" class="ew-item-list"></div>
+<selection-list hidden
+    id="x_Gender"
+    name="x_Gender"
+    value="<?= HtmlEncode($Page->Gender->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_Gender"
+    data-target="dsl_x_Gender"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->Gender->isInvalidClass() ?>"
+    data-table="fans"
+    data-field="x_Gender"
+    data-value-separator="<?= $Page->Gender->displayValueSeparatorAttribute() ?>"
+    <?= $Page->Gender->editAttributes() ?>></selection-list>
 <?= $Page->Gender->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->Gender->getErrorMessage() ?></div>
 </span>
