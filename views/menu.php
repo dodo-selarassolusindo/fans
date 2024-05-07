@@ -12,7 +12,6 @@ $topMenu->addMenuItem(3, "mi_fans", $Language->menuPhrase("3", "MenuText"), "fan
 $topMenu->addMenuItem(2, "mi_employees", $Language->menuPhrase("2", "MenuText"), "employeeslist", -1, "", AllowListMenu('{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}employees'), false, false, "", "", true, false);
 $topMenu->addMenuItem(7, "mi_userlevels", $Language->menuPhrase("7", "MenuText"), "userlevelslist", -1, "", AllowListMenu('{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}userlevels'), false, false, "", "", true, false);
 $topMenu->addMenuItem(9, "mi_audittrail", $Language->menuPhrase("9", "MenuText"), "audittraillist", -1, "", AllowListMenu('{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}audittrail'), false, false, "", "", true, false);
-$topMenu->addMenuItem(20, "mi_exportlog", $Language->menuPhrase("20", "MenuText"), "exportloglist", -1, "", AllowListMenu('{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}exportlog'), false, false, "", "", true, false);
 echo $topMenu->toScript();
 
 // Sidebar menu
@@ -25,5 +24,4 @@ $sideMenu->addMenuItem(3, "mi_fans", $Language->menuPhrase("3", "MenuText"), "fa
 $sideMenu->addMenuItem(2, "mi_employees", $Language->menuPhrase("2", "MenuText"), "employeeslist", -1, "", AllowListMenu('{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}employees'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(7, "mi_userlevels", $Language->menuPhrase("7", "MenuText"), "userlevelslist", -1, "", AllowListMenu('{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}userlevels'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(9, "mi_audittrail", $Language->menuPhrase("9", "MenuText"), "audittraillist", -1, "", AllowListMenu('{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}audittrail'), false, false, "", "", true, true);
-$sideMenu->addMenuItem(20, "mi_exportlog", $Language->menuPhrase("20", "MenuText"), "exportloglist", -1, "", AllowListMenu('{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}exportlog'), false, false, "", "", true, true);
 echo $sideMenu->toScript();
