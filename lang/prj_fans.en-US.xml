@@ -2,32 +2,38 @@
   <project>
     <phrase id="bodytitle" value="Data Fans" />
     <phrase id="footertext" value="&amp;copy;2024 Selaras Solusindo. All rights reserved." />
-    <menu id="9">
-      <phrase id="menutext" value="audittrail" />
-    </menu>
     <menu id="8">
       <phrase id="menutext" value="Beranda" />
     </menu>
-    <menu id="1">
-      <phrase id="menutext" value="Acara" />
-    </menu>
-    <menu id="2">
-      <phrase id="menutext" value="Pengguna" />
-    </menu>
-    <menu id="3">
-      <phrase id="menutext" value="Fans" />
-    </menu>
-    <menu id="4">
-      <phrase id="menutext" value="Kota" />
+    <menu id="18">
+      <phrase id="menutext" value="Master" />
     </menu>
     <menu id="5">
       <phrase id="menutext" value="Radio" />
     </menu>
-    <menu id="6">
-      <phrase id="menutext" value="Hak Akses Detail" />
+    <menu id="1">
+      <phrase id="menutext" value="Acara" />
+    </menu>
+    <menu id="4">
+      <phrase id="menutext" value="Kota" />
+    </menu>
+    <menu id="3">
+      <phrase id="menutext" value="Fans" />
+    </menu>
+    <menu id="2">
+      <phrase id="menutext" value="Pengguna" />
+    </menu>
+    <menu id="19">
+      <phrase id="menutext" value="Setting" />
     </menu>
     <menu id="7">
       <phrase id="menutext" value="Hak Akses" />
+    </menu>
+    <menu id="6">
+      <phrase id="menutext" value="Hak Akses Detail" />
+    </menu>
+    <menu id="9">
+      <phrase id="menutext" value="Log Aktivitas" />
     </menu>
     <table id="acara">
       <phrase id="tblcaption" value="Acara" />
@@ -209,7 +215,7 @@
       <phrase id="tblcaption" value="Beranda" />
     </table>
     <table id="audittrail">
-      <phrase id="tblcaption" value="audittrail" />
+      <phrase id="tblcaption" value="Log Aktivitas" />
       <field id="id">
         <phrase id="fldcaption" value="Id" />
       </field>
