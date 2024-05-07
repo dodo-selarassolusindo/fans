@@ -139,7 +139,7 @@ loadjs.ready("head", function () {
         <label id="elh_fans_NomorHP" for="x_NomorHP" class="<?= $Page->LeftColumnClass ?>"><?= $Page->NomorHP->caption() ?><?= $Page->NomorHP->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->NomorHP->cellAttributes() ?>>
 <span id="el_fans_NomorHP">
-<input type="<?= $Page->NomorHP->getInputTextType() ?>" name="x_NomorHP" id="x_NomorHP" data-table="fans" data-field="x_NomorHP" value="<?= $Page->NomorHP->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->NomorHP->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->NomorHP->formatPattern()) ?>"<?= $Page->NomorHP->editAttributes() ?> aria-describedby="x_NomorHP_help">
+<input type="<?= $Page->NomorHP->getInputTextType() ?>" name="x_NomorHP" id="x_NomorHP" data-table="fans" data-field="x_NomorHP" value="<?= $Page->NomorHP->EditValue ?>" size="15" maxlength="255" placeholder="<?= HtmlEncode($Page->NomorHP->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->NomorHP->formatPattern()) ?>"<?= $Page->NomorHP->editAttributes() ?> aria-describedby="x_NomorHP_help">
 <?= $Page->NomorHP->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->NomorHP->getErrorMessage() ?></div>
 </span>
@@ -151,7 +151,7 @@ loadjs.ready("head", function () {
         <label id="elh_fans_TahunKelahiran" for="x_TahunKelahiran" class="<?= $Page->LeftColumnClass ?>"><?= $Page->TahunKelahiran->caption() ?><?= $Page->TahunKelahiran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->TahunKelahiran->cellAttributes() ?>>
 <span id="el_fans_TahunKelahiran">
-<input type="<?= $Page->TahunKelahiran->getInputTextType() ?>" name="x_TahunKelahiran" id="x_TahunKelahiran" data-table="fans" data-field="x_TahunKelahiran" value="<?= $Page->TahunKelahiran->EditValue ?>" size="30" maxlength="4" placeholder="<?= HtmlEncode($Page->TahunKelahiran->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->TahunKelahiran->formatPattern()) ?>"<?= $Page->TahunKelahiran->editAttributes() ?> aria-describedby="x_TahunKelahiran_help">
+<input type="<?= $Page->TahunKelahiran->getInputTextType() ?>" name="x_TahunKelahiran" id="x_TahunKelahiran" data-table="fans" data-field="x_TahunKelahiran" value="<?= $Page->TahunKelahiran->EditValue ?>" size="4" maxlength="4" placeholder="<?= HtmlEncode($Page->TahunKelahiran->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->TahunKelahiran->formatPattern()) ?>"<?= $Page->TahunKelahiran->editAttributes() ?> aria-describedby="x_TahunKelahiran_help">
 <?= $Page->TahunKelahiran->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->TahunKelahiran->getErrorMessage() ?></div>
 </span>
