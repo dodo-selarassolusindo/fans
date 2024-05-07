@@ -5,9 +5,6 @@
     <menu id="8">
       <phrase id="menutext" value="Beranda" />
     </menu>
-    <menu id="18">
-      <phrase id="menutext" value="Master" />
-    </menu>
     <menu id="5">
       <phrase id="menutext" value="Radio" />
     </menu>
@@ -23,9 +20,6 @@
     <menu id="2">
       <phrase id="menutext" value="Pengguna" />
     </menu>
-    <menu id="19">
-      <phrase id="menutext" value="Setting" />
-    </menu>
     <menu id="7">
       <phrase id="menutext" value="Hak Akses" />
     </menu>
@@ -34,6 +28,9 @@
     </menu>
     <menu id="9">
       <phrase id="menutext" value="Log Aktivitas" />
+    </menu>
+    <menu id="20">
+      <phrase id="menutext" value="Log Export" />
     </menu>
     <table id="acara">
       <phrase id="tblcaption" value="Acara" />
@@ -249,6 +246,33 @@
       </field>
       <field id="newvalue">
         <phrase id="fldcaption" value="New Value" />
+      </field>
+    </table>
+    <table id="exportlog">
+      <phrase id="tblcaption" value="Log Export" />
+      <field id="fileid">
+        <phrase id="fldcaption" value="File Id" />
+      </field>
+      <field id="datetime">
+        <phrase id="fldcaption" value="Date Time" />
+      </field>
+      <field id="user">
+        <phrase id="fldcaption" value="User" />
+      </field>
+      <field id="_exporttype">
+        <phrase id="fldcaption" value="Export Type" />
+      </field>
+      <field id="_table">
+        <phrase id="fldcaption" value="Table" />
+      </field>
+      <field id="keyvalue">
+        <phrase id="fldcaption" value="Key Value" />
+      </field>
+      <field id="filename">
+        <phrase id="fldcaption" value="Filename" />
+      </field>
+      <field id="__request">
+        <phrase id="fldcaption" value="Request" />
       </field>
     </table>
   </project>

@@ -31,6 +31,11 @@
         clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
         clone ($p['PHPMaker2024\\prj_fans\\Attributes\\Get'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('PHPMaker2024\\prj_fans\\Attributes\\Get')),
         clone $p['PHPMaker2024\\prj_fans\\Attributes\\Get'],
         clone $p['PHPMaker2024\\prj_fans\\Attributes\\Map'],
@@ -53,6 +58,31 @@
     [
         'PHPMaker2024\\prj_fans\\Attributes\\Map' => [
             'methods' => [
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
                 [
                     'GET',
                     'POST',
@@ -307,6 +337,11 @@
                 '/employeesview[/{EmployeeID}]',
                 '/employeesedit[/{EmployeeID}]',
                 '/employeesdelete[/{EmployeeID}]',
+                '/exportloglist[/{FileId:.*}]',
+                '/exportlogadd[/{FileId:.*}]',
+                '/exportlogview[/{FileId:.*}]',
+                '/exportlogedit[/{FileId:.*}]',
+                '/exportlogdelete[/{FileId:.*}]',
                 '/fanslist[/{FansID}]',
                 '/fansadd[/{FansID}]',
                 '/fansview[/{FansID}]',
@@ -357,6 +392,11 @@
                 'PHPMaker2024\\prj_fans\\EmployeesController:view',
                 'PHPMaker2024\\prj_fans\\EmployeesController:edit',
                 'PHPMaker2024\\prj_fans\\EmployeesController:delete',
+                'PHPMaker2024\\prj_fans\\ExportlogController:list',
+                'PHPMaker2024\\prj_fans\\ExportlogController:add',
+                'PHPMaker2024\\prj_fans\\ExportlogController:view',
+                'PHPMaker2024\\prj_fans\\ExportlogController:edit',
+                'PHPMaker2024\\prj_fans\\ExportlogController:delete',
                 'PHPMaker2024\\prj_fans\\FansController:list',
                 'PHPMaker2024\\prj_fans\\FansController:add',
                 'PHPMaker2024\\prj_fans\\FansController:view',
@@ -391,6 +431,21 @@
                 'PHPMaker2024\\prj_fans\\UserlevelsController:delete',
             ],
             'middleware' => [
+                [
+                    'PHPMaker2024\\prj_fans\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_fans\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_fans\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_fans\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_fans\\PermissionMiddleware',
+                ],
                 [
                     'PHPMaker2024\\prj_fans\\PermissionMiddleware',
                 ],
@@ -551,6 +606,11 @@
                 'view.employees',
                 'edit.employees',
                 'delete.employees',
+                'list.exportlog',
+                'add.exportlog',
+                'view.exportlog',
+                'edit.exportlog',
+                'delete.exportlog',
                 'list.fans',
                 'add.fans',
                 'view.fans',
@@ -585,6 +645,11 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
+                [],
+                [],
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -685,6 +750,11 @@
         $o[45],
         $o[46],
         $o[47],
+        $o[48],
+        $o[49],
+        $o[50],
+        $o[51],
+        $o[52],
     ],
     []
 );

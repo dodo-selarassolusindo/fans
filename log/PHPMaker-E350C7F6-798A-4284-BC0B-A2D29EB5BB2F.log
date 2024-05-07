@@ -8,6 +8,7 @@ C:\xampp\htdocs\fans\controllers\AudittrailController.php
 C:\xampp\htdocs\fans\controllers\BerandaController.php
 C:\xampp\htdocs\fans\controllers\ControllerBase.php
 C:\xampp\htdocs\fans\controllers\EmployeesController.php
+C:\xampp\htdocs\fans\controllers\ExportlogController.php
 C:\xampp\htdocs\fans\controllers\FansController.php
 C:\xampp\htdocs\fans\controllers\LokasiController.php
 C:\xampp\htdocs\fans\controllers\OthersController.php
@@ -45,6 +46,12 @@ C:\xampp\htdocs\fans\models\EmployeesDelete.php
 C:\xampp\htdocs\fans\models\EmployeesEdit.php
 C:\xampp\htdocs\fans\models\EmployeesList.php
 C:\xampp\htdocs\fans\models\EmployeesView.php
+C:\xampp\htdocs\fans\models\Exportlog.php
+C:\xampp\htdocs\fans\models\ExportlogAdd.php
+C:\xampp\htdocs\fans\models\ExportlogDelete.php
+C:\xampp\htdocs\fans\models\ExportlogEdit.php
+C:\xampp\htdocs\fans\models\ExportlogList.php
+C:\xampp\htdocs\fans\models\ExportlogView.php
 C:\xampp\htdocs\fans\models\Fans.php
 C:\xampp\htdocs\fans\models\FansAdd.php
 C:\xampp\htdocs\fans\models\FansDelete.php
@@ -130,6 +137,7 @@ C:\xampp\htdocs\fans\src\EntityDescriptor.php
 C:\xampp\htdocs\fans\src\Entity\Acara.php
 C:\xampp\htdocs\fans\src\Entity\Audittrail.php
 C:\xampp\htdocs\fans\src\Entity\Employee.php
+C:\xampp\htdocs\fans\src\Entity\Exportlog.php
 C:\xampp\htdocs\fans\src\Entity\Fan.php
 C:\xampp\htdocs\fans\src\Entity\Lokasi.php
 C:\xampp\htdocs\fans\src\Entity\Radio.php
@@ -240,6 +248,11 @@ C:\xampp\htdocs\fans\views\EmployeesEdit.php
 C:\xampp\htdocs\fans\views\EmployeesList.php
 C:\xampp\htdocs\fans\views\EmployeesView.php
 C:\xampp\htdocs\fans\views\Error.php
+C:\xampp\htdocs\fans\views\ExportlogAdd.php
+C:\xampp\htdocs\fans\views\ExportlogDelete.php
+C:\xampp\htdocs\fans\views\ExportlogEdit.php
+C:\xampp\htdocs\fans\views\ExportlogList.php
+C:\xampp\htdocs\fans\views\ExportlogView.php
 C:\xampp\htdocs\fans\views\FansAdd.php
 C:\xampp\htdocs\fans\views\FansDelete.php
 C:\xampp\htdocs\fans\views\FansEdit.php

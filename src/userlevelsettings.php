@@ -39,7 +39,9 @@ $USER_LEVEL_PRIVS = [["{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}acara","-2","0"],
     ["{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}beranda.php","-2","72"],
     ["{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}beranda.php","0","0"],
     ["{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}audittrail","-2","0"],
-    ["{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}audittrail","0","0"]];
+    ["{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}audittrail","0","0"],
+    ["{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}exportlog","-2","0"],
+    ["{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}exportlog","0","0"]];
 
 /**
  * Tables
@@ -60,4 +62,5 @@ $USER_LEVEL_TABLES = [["acara","acara","Acara",true,"{E350C7F6-798A-4284-BC0B-A2
     ["userlevelpermissions","userlevelpermissions","Hak Akses Detail",true,"{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}","userlevelpermissionslist"],
     ["userlevels","userlevels","Hak Akses",true,"{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}","userlevelslist"],
     ["beranda.php","beranda","Beranda",true,"{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}","beranda"],
-    ["audittrail","audittrail","Log Aktivitas",true,"{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}","audittraillist"]];
+    ["audittrail","audittrail","Log Aktivitas",true,"{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}","audittraillist"],
+    ["exportlog","exportlog","Log Export",true,"{E350C7F6-798A-4284-BC0B-A2D29EB5BB2F}","exportloglist"]];

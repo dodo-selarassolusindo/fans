@@ -88,6 +88,7 @@ return [
     "userlevels" => \DI\create(Userlevels::class),
     "beranda" => \DI\create(Beranda::class),
     "audittrail" => \DI\create(Audittrail::class),
+    "exportlog" => \DI\create(Exportlog::class),
 
     // User table
     "usertable" => \DI\get("employees"),
