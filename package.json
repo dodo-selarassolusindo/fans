@@ -1,0 +1,11 @@
+{
+    "name": "prj-fans",
+    "version": "24.11.0",
+    "description": "prj fans",
+    "license": "SEE LICENSE IN LICENSE.md",
+    "private": true,
+    "dependencies": {},
+    "engines": {
+        "node": ">=18"
+    }
+}
